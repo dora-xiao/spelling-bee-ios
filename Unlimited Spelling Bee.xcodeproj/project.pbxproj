@@ -13,6 +13,7 @@
 		869EA9002E273BB4007FBF78 /* UnlimitedSpellingBee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869EA8FF2E273BB4007FBF78 /* UnlimitedSpellingBee.swift */; };
 		869EA9042E273C70007FBF78 /* Puzzle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869EA9032E273C70007FBF78 /* Puzzle.swift */; };
 		869EA9062E273E56007FBF78 /* puzzles.json in Resources */ = {isa = PBXBuildFile; fileRef = 869EA9052E273E56007FBF78 /* puzzles.json */; };
+		869EA9082E274826007FBF78 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869EA9072E274826007FBF78 /* Util.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		869EA8FF2E273BB4007FBF78 /* UnlimitedSpellingBee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlimitedSpellingBee.swift; sourceTree = "<group>"; };
 		869EA9032E273C70007FBF78 /* Puzzle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzle.swift; sourceTree = "<group>"; };
 		869EA9052E273E56007FBF78 /* puzzles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = puzzles.json; sourceTree = "<group>"; };
+		869EA9072E274826007FBF78 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				869EA9032E273C70007FBF78 /* Puzzle.swift */,
+				869EA9072E274826007FBF78 /* Util.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -164,6 +167,7 @@
 				869EA9042E273C70007FBF78 /* Puzzle.swift in Sources */,
 				869EA9002E273BB4007FBF78 /* UnlimitedSpellingBee.swift in Sources */,
 				869EA8FE2E273B7D007FBF78 /* HomeView.swift in Sources */,
+				869EA9082E274826007FBF78 /* Util.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
