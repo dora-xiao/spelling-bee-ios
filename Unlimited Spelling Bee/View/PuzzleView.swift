@@ -2,12 +2,18 @@ import SwiftUI
 
 struct PuzzleView: View {
   @EnvironmentObject var appData : AppData
-  let size: CGFloat = 100
-  @State var word: String = "Enter guess..."
+  
+  // Guessed words
   @State var guessed: String = "Your words..."
   @State var chevron: String = "chevron.down"
+  @State var guessBoxHeight: CGFloat = 45
   var guessedList: [String] = []
+  
+  // Other data
+  let size: CGFloat = 100
   @State private var progress = 0.5
+  @State var word: String = "Enter guess..."
+  
   var datelabel: String {
     return idToDateLabel(id: appData.puzzleId)
   }
@@ -44,30 +50,47 @@ struct PuzzleView: View {
           .scaleEffect(x: 1, y: 2, anchor: .center)
           .tint(Color.customYellow)
           .padding([.bottom], 10)
-        
-        ZStack {
-          RoundedRectangle(cornerRadius: 10)
-            .stroke(Color.customGrey, lineWidth: 2)
-            .frame(height: 45)
-          Text(guessed)
-            .font(.subheadline)
-            .foregroundColor(Color.customDarkGrey)
-            .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
-            .offset(CGSize(width: -5, height: 0))
-            .lineLimit(1)
-          HStack() {
-            Spacer()
-            Image(systemName: chevron)
-                .padding([.trailing], 10)
-          }
-        }
-        .frame(width: UIScreen.main.bounds.width - 60)
-        .contentShape(Rectangle())
-        .onTapGesture {
-          chevron = chevron == "chevron.down" ? "chevron.up" : "chevron.down"
-        }
-        .offset(CGSize(width: 30, height: 0))
       }
+      
+      ZStack(alignment: .top) {
+        RoundedRectangle(cornerRadius: 10)
+          .stroke(Color.customGrey, lineWidth: 2)
+          .frame(height: guessBoxHeight)
+          .overlay(
+            RoundedRectangle(cornerRadius: 10)
+              .stroke(Color.customGrey, lineWidth: 2)
+              .background(Color.customWhite)
+          )
+        Text(guessed)
+          .font(.subheadline)
+          .foregroundColor(chevron == "chevron.down" ? Color.customDarkGrey : Color.black)
+          .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
+          .offset(CGSize(width: -5, height: 0))
+          .lineLimit(1)
+          .padding([.top], 12.5)
+        HStack() {
+          Spacer()
+          Image(systemName: chevron)
+            .padding([.trailing], 10)
+        }
+        .padding([.top], 17)
+      }
+      .frame(width: UIScreen.main.bounds.width - 60)
+      .contentShape(Rectangle())
+      .onTapGesture {
+        if(chevron == "chevron.down") { // Expand
+          chevron = "chevron.up"
+          guessBoxHeight = UIScreen.main.bounds.height * 0.7
+          
+        } else { // Collapse
+          chevron = "chevron.down"
+          guessBoxHeight = 45
+        }
+      }
+      .offset(CGSize(width: 30, height: 100))
+      .zIndex(20)
+      
+      
       
       VStack {
         Text(word) // Word Guess
