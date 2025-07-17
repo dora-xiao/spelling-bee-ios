@@ -125,7 +125,7 @@ struct HexagonShape: Shape {
 struct Tile: View {
   let size: CGFloat
   let color: Color
-  let letter: String
+  @Binding var letter: String
   
   var body: some View {
     ZStack {

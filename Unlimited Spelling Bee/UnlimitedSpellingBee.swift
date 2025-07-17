@@ -19,8 +19,13 @@ class AppData : ObservableObject {
   @Published var currView: Views = Views.home
   @Published var prevViews: [Views] = []
   @Published var letterCenter: String = "A"
-  @Published var letterOuter: [String] = ["B", "C", "D", "E", "F", "G"]
-  
+  @Published var letterOuter1: String = "B"
+  @Published var letterOuter2: String = "C"
+  @Published var letterOuter3: String = "D"
+  @Published var letterOuter4: String = "E"
+  @Published var letterOuter5: String = "F"
+  @Published var letterOuter6: String = "G"
+    
   func navigate(_ destination: Views) {
     prevViews.append(currView)
     currView = destination
