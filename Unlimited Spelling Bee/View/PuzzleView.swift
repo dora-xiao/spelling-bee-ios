@@ -82,7 +82,7 @@ struct PuzzleView: View {
           )
           
           ButtonOutlineSymbol(
-            symbol: "figure.strengthtraining.traditional",
+            symbol: "shuffle",
             color: Color.customGrey,
             action: {
               var letters = [
