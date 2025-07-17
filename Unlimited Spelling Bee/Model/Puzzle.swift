@@ -63,6 +63,21 @@ func idToDate(id: Int) -> (day: Int, month: Int, year: Int)? {
     return (day, month, year)
 }
 
+func idToDateLabel(id: Int) -> String {
+  var label = "Unknown Date"
+  if let (day, month, year) = idToDate(id: id) {
+    var comps = DateComponents() // <1>
+    comps.day = day
+    comps.month = month
+    comps.year = year
+    let date = Calendar.current.date(from: comps)!
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMM dd, yyyy"
+    label = dateFormatter.string(from: date)
+  }
+  return label
+}
+
 // Gives puzzle ids that are in the chosen month and year
 func puzzleIDs(month: Int, year: Int, puzzles: [Int: Puzzle]) -> [Int] {
     return puzzles.values

@@ -4,6 +4,9 @@ struct PuzzleView: View {
   @EnvironmentObject var appData : AppData
   let size: CGFloat = 100
   @State var word: String = "Enter guess..."
+  var datelabel: String {
+    return idToDateLabel(id: appData.puzzleId)
+  }
   
   func tapLetter(_ letter: String) -> Void {
     if(word == "Enter guess...") {
@@ -17,15 +20,18 @@ struct PuzzleView: View {
     ZStack(alignment: .topLeading) {
       Color.customWhite
         .ignoresSafeArea()
-      
-      Image(systemName: "chevron.left")
-        .padding(20)
-        .bold()
-        .font(.title3)
-        .onTapGesture { appData.navigate(Views.home) }
+      HStack {
+        Image(systemName: "chevron.left")
+          .padding([.leading, .top, .bottom], 20)
+          .padding([.trailing], 10)
+          .bold()
+          .font(.title3)
+          .onTapGesture { appData.navigate(Views.home) }
+        Text(datelabel)
+      }
       
       VStack {
-
+        
         // TODO: Progress bar & guessed words
         
         Text(word) // Word Guess
