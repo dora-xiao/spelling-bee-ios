@@ -4,6 +4,9 @@ struct PuzzleView: View {
   @EnvironmentObject var appData : AppData
   let size: CGFloat = 100
   @State var word: String = "Enter guess..."
+  @State var guessed: String = ""
+  var guessedList: [String] = []
+  @State private var progress = 0.5
   var datelabel: String {
     return idToDateLabel(id: appData.puzzleId)
   }
@@ -20,20 +23,48 @@ struct PuzzleView: View {
     ZStack(alignment: .topLeading) {
       Color.customWhite
         .ignoresSafeArea()
-      HStack {
-        Image(systemName: "chevron.left")
-          .padding([.leading, .top, .bottom], 20)
-          .padding([.trailing], 10)
-          .bold()
-          .font(.title3)
-          .onTapGesture { appData.navigate(Views.home) }
-        Text(datelabel)
+      
+      VStack(alignment: .leading) {
+        HStack {
+          Image(systemName: "chevron.left")
+            .padding([.leading, .top, .bottom], 20)
+            .padding([.trailing], 10)
+            .bold()
+            .font(.title3)
+            .onTapGesture { appData.navigate(Views.home) }
+          Text(datelabel)
+            .font(.title3)
+        }
+        
+        ProgressView(value: progress, total: 1)
+          .clipShape(RoundedRectangle(cornerRadius: 5))
+          .frame(width: UIScreen.main.bounds.width - 60)
+          .offset(CGSize(width: 30, height: 0))
+          .scaleEffect(x: 1, y: 2, anchor: .center)
+          .tint(Color.customYellow)
+        
+        ZStack {
+          RoundedRectangle(cornerRadius: 10)
+            .stroke(Color.customGrey, lineWidth: 2)
+            .frame(height: 45)
+          Text(guessed)
+            .font(.subheadline)
+            .foregroundColor(Color.customDarkGrey)
+            .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
+            .offset(CGSize(width: -5, height: 0))
+            .lineLimit(1)
+          HStack() {
+            Spacer()
+            Image(systemName: "chevron.down")
+              .padding([.trailing], 10)
+          }
+        }
+        .padding([.top], 10)
+        .offset(CGSize(width: 30, height: 0))
+        .frame(width: UIScreen.main.bounds.width - 60)
       }
       
       VStack {
-        
-        // TODO: Progress bar & guessed words
-        
         Text(word) // Word Guess
           .foregroundColor(word == "Enter guess..." ? Color.customGrey : Color.black)
           .bold()
