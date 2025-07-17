@@ -47,7 +47,7 @@ struct BubbleButton: View {
 }
 
 // Defined reusable hexagon for board
-struct Hexagon: Shape {
+struct HexagonShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
 
@@ -79,7 +79,7 @@ struct Tile: View {
   
   var body: some View {
     ZStack {
-      Hexagon()
+      HexagonShape()
         .fill(color)
         .frame(width: size, height: size)
         .padding(-0.03 * size)
@@ -88,6 +88,7 @@ struct Tile: View {
         .foregroundColor(Color.black)
         .bold()
         .font(.title)
+        .disabled(true)
     }
   }
 }
