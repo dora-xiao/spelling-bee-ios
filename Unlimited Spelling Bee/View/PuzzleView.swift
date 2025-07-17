@@ -4,7 +4,8 @@ struct PuzzleView: View {
   @EnvironmentObject var appData : AppData
   let size: CGFloat = 100
   @State var word: String = "Enter guess..."
-  @State var guessed: String = ""
+  @State var guessed: String = "Your words..."
+  @State var chevron: String = "chevron.down"
   var guessedList: [String] = []
   @State private var progress = 0.5
   var datelabel: String {
@@ -42,6 +43,7 @@ struct PuzzleView: View {
           .offset(CGSize(width: 30, height: 0))
           .scaleEffect(x: 1, y: 2, anchor: .center)
           .tint(Color.customYellow)
+          .padding([.bottom], 10)
         
         ZStack {
           RoundedRectangle(cornerRadius: 10)
@@ -55,13 +57,16 @@ struct PuzzleView: View {
             .lineLimit(1)
           HStack() {
             Spacer()
-            Image(systemName: "chevron.down")
-              .padding([.trailing], 10)
+            Image(systemName: chevron)
+                .padding([.trailing], 10)
           }
         }
-        .padding([.top], 10)
-        .offset(CGSize(width: 30, height: 0))
         .frame(width: UIScreen.main.bounds.width - 60)
+        .contentShape(Rectangle())
+        .onTapGesture {
+          chevron = chevron == "chevron.down" ? "chevron.up" : "chevron.down"
+        }
+        .offset(CGSize(width: 30, height: 0))
       }
       
       VStack {
