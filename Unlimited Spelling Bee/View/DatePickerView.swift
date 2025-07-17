@@ -4,12 +4,18 @@ struct DatePickerView: View {
   @EnvironmentObject var appData : AppData
   
   var body: some View {
-    ZStack {
+    ZStack(alignment: .topLeading) {
       Color.customWhite
         .ignoresSafeArea()
       
-      VStack(spacing: 20) {
-        Text("Date picker view")
+      Image(systemName: "chevron.left")
+        .padding(20)
+        .bold()
+        .font(.title3)
+        .onTapGesture { appData.navigate(Views.home) }
+      
+      VStack {
+        
       }
     }
   }

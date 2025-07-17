@@ -3,10 +3,10 @@ import SwiftUI
 struct PuzzleView: View {
   @EnvironmentObject var appData : AppData
   let size: CGFloat = 100
-  @State var word: String = "Enter word..."
-
+  @State var word: String = "Enter guess..."
+  
   func tapLetter(_ letter: String) -> Void {
-    if(word == "Enter word...") {
+    if(word == "Enter guess...") {
       word = letter
     } else if(word.count < 16) {
       word += letter
@@ -14,14 +14,22 @@ struct PuzzleView: View {
   }
   
   var body: some View {
-    ZStack {
+    ZStack(alignment: .topLeading) {
       Color.customWhite
         .ignoresSafeArea()
+      
+      Image(systemName: "chevron.left")
+        .padding(20)
+        .bold()
+        .font(.title3)
+        .onTapGesture { appData.navigate(Views.home) }
+      
       VStack {
+
         // TODO: Progress bar & guessed words
         
         Text(word) // Word Guess
-          .foregroundColor(word == "Enter word..." ? Color.customGrey : Color.black)
+          .foregroundColor(word == "Enter guess..." ? Color.customGrey : Color.black)
           .bold()
           .font(.title)
           .disabled(true)
@@ -64,8 +72,11 @@ struct PuzzleView: View {
             text: "Delete",
             color: Color.customGrey,
             action: {
-              if(word.count > 0) {
+              if(word == "Enter guess...") { return }
+              if(word.count > 1) {
                 word = String(word.dropLast())
+              } else {
+                word = "Enter guess..."
               }
             }
           )
@@ -95,13 +106,12 @@ struct PuzzleView: View {
           ButtonOutline(
             text: "Enter",
             color: Color.customGrey,
-            action: {}
+            action: {
+              // TODO: handle guess
+            }
           )
-          .onTapGesture {
-            
-          }
         }
-      }
+      }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
 }
