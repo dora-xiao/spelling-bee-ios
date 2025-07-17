@@ -14,20 +14,20 @@ struct HomeView: View {
           .scaledToFit()
           .frame(width: UIScreen.main.bounds.width * 0.5)
           .padding([.bottom], 40)
-        
-        BubbleButton(
+
+        ButtonSolid(
           text: "Choose Puzzle",
           color: Color.black,
           action: { appData.navigate(Views.datepicker) }
         )
         
-        BubbleButton(
+        ButtonSolid(
           text: "Random",
           color: Color.black,
           action: { appData.navigate(Views.puzzle) }
         )
         
-        BubbleButton(
+        ButtonSolid(
           text: "History",
           color: Color.black,
           action: { appData.navigate(Views.history) }

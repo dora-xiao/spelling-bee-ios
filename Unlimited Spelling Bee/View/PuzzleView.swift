@@ -18,7 +18,9 @@ struct PuzzleView: View {
       Color.customWhite
         .ignoresSafeArea()
       VStack {
-        Text(word)
+        // TODO: Progress bar & guessed words
+        
+        Text(word) // Word Guess
           .foregroundColor(word == "Enter word..." ? Color.customGrey : Color.black)
           .bold()
           .font(.title)
@@ -27,8 +29,8 @@ struct PuzzleView: View {
           .lineLimit(1)
           .truncationMode(.head)
           .frame(width: UIScreen.main.bounds.width * 0.8)
-
-        HStack(spacing: -0.12 * size) {
+        
+        HStack(spacing: -0.12 * size) { // Board
           VStack(spacing: 0) {
             Tile(size: size, color: Color.customGrey, letter: appData.letterOuter[0])
               .onTapGesture {tapLetter(appData.letterOuter[0])}
@@ -53,6 +55,27 @@ struct PuzzleView: View {
             Tile(size: size, color: Color.customGrey, letter: appData.letterOuter[5])
               .onTapGesture {tapLetter(appData.letterOuter[5])}
           }
+        }
+        .padding([.bottom], 40)
+        
+        HStack { // Buttons
+          ButtonOutline(
+            text: "Delete",
+            color: Color.customGrey,
+            action: {}
+          )
+          
+          ButtonOutlineSymbol(
+            symbol: "figure.strengthtraining.traditional",
+            color: Color.customGrey,
+            action: {}
+          )
+          
+          ButtonOutline(
+            text: "Enter",
+            color: Color.customGrey,
+            action: {}
+          )
         }
       }
     }
