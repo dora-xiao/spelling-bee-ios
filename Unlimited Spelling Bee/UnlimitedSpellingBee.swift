@@ -7,7 +7,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   }
 }
 
-enum CurrView:Int {
+enum Views:Int {
   case home
   case datepicker
   case puzzle
@@ -16,8 +16,13 @@ enum CurrView:Int {
 
 // Environment variable for whole app
 class AppData : ObservableObject {
-  @Published var currView = CurrView.home
-  @Published var prevViews : [CurrView] = []
+  @Published var currView = Views.home
+  @Published var prevViews : [Views] = []
+  
+  func navigate(_ destination: Views) {
+    prevViews.append(currView)
+    currView = destination
+  }
 }
 
 @main
@@ -27,7 +32,7 @@ struct Habit_TrackerApp: App {
   
   var body: some Scene {
     WindowGroup {
-      HomeView().environmentObject(appData)
+      NavigationView().environmentObject(appData)
     }
   }
 }

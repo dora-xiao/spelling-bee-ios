@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
+// Extend UIColor to accept hexcodes
 extension UIColor {
   convenience init(red: Int, green: Int, blue: Int) {
     assert(red >= 0 && red <= 255, "Invalid red component")
@@ -20,7 +21,26 @@ extension UIColor {
   }
 }
 
+// Use the extended UIColor to define custom colors
 extension Color {
   static let customGrey = Color(UIColor(rgb: 0xE6E6E6))
   static let customYellow = Color(UIColor(rgb: 0xF7DA20))
+}
+
+// Define reusable button style
+struct BubbleButton: View {
+  let text: String
+  let color: Color
+  var action: (() -> Void)
+  var body: some View {
+    Button(action: action) {
+      Text(text)
+        .frame(width: UIScreen.main.bounds.width * 0.5)
+        .padding(6)
+    }
+    .buttonStyle(.borderedProminent)
+    .tint(color)
+    .font(.title2)
+    .cornerRadius(50)
+  }
 }
