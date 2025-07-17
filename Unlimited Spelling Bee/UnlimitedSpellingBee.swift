@@ -25,6 +25,11 @@ class AppData : ObservableObject {
   @Published var letterOuter4: String = "E"
   @Published var letterOuter5: String = "F"
   @Published var letterOuter6: String = "G"
+  var puzzles: [Int: Puzzle]
+  
+  init() {
+    self.puzzles = loadPuzzlesById()
+  }
     
   func navigate(_ destination: Views) {
     prevViews.append(currView)
