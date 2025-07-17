@@ -15,7 +15,7 @@ struct DatePickerView: View {
         .onTapGesture { appData.navigate(Views.home) }
       
       VStack {
-        
+        let temp = print(puzzleIDs(month: 1, year: 2024, puzzles: appData.puzzles).count)
       }
     }
   }

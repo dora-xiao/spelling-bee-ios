@@ -62,3 +62,11 @@ func idToDate(id: Int) -> (day: Int, month: Int, year: Int)? {
     guard let day = comps.day, let month = comps.month, let year = comps.year else { return nil }
     return (day, month, year)
 }
+
+// Gives puzzle ids that are in the chosen month and year
+func puzzleIDs(month: Int, year: Int, puzzles: [Int: Puzzle]) -> [Int] {
+    return puzzles.values
+        .filter { $0.month == month && $0.year == year }
+        .map { $0.id }
+        .sorted()
+}
