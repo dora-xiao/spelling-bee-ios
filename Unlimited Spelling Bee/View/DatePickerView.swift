@@ -5,7 +5,7 @@ struct DatePickerView: View {
   
   var body: some View {
     ZStack {
-      Color.customYellow
+      Color.customWhite
         .ignoresSafeArea()
       
       VStack(spacing: 20) {

@@ -16,8 +16,10 @@ enum Views:Int {
 
 // Environment variable for whole app
 class AppData : ObservableObject {
-  @Published var currView = Views.home
-  @Published var prevViews : [Views] = []
+  @Published var currView: Views = Views.home
+  @Published var prevViews: [Views] = []
+  @Published var letterCenter: String = "A"
+  @Published var letterOuter: [String] = ["B", "C", "D", "E", "F", "G"]
   
   func navigate(_ destination: Views) {
     prevViews.append(currView)
