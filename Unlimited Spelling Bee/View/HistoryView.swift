@@ -13,10 +13,15 @@ struct HistoryView: View {
         .bold()
         .font(.title3)
         .onTapGesture { appData.navigate(Views.home) }
+        .foregroundColor(Color.black)
       
-      VStack {
+      VStack() {
+        Spacer()
         Text("To Do")
+          .foregroundColor(Color.black)
+        Spacer()
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
 }

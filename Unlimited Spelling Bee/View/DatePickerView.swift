@@ -13,11 +13,15 @@ struct DatePickerView: View {
         .bold()
         .font(.title3)
         .onTapGesture { appData.navigate(Views.home) }
+        .foregroundColor(Color.black)
       
-      VStack {
+      VStack(alignment: .center) {
+        Spacer()
         Text("To Do")
-        let temp = print(puzzleIDs(month: 1, year: 2024, puzzles: appData.puzzles).count)
+          .foregroundColor(Color.black)
+        Spacer()
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
 }

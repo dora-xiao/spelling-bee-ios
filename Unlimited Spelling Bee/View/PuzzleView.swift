@@ -121,6 +121,7 @@ struct PuzzleView: View {
           Spacer()
           Image(systemName: chevron)
             .padding([.trailing], 10)
+            .foregroundColor(Color.black)
         }
         .padding([.top], 17)
       }
