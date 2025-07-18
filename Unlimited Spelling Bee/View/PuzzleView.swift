@@ -8,6 +8,7 @@ struct PuzzleView: View {
   @State var chevron: String = "chevron.down"
   @State var guessBoxHeight: CGFloat = 45
   @State var guessedList: [String] = []
+  @State var lineLimit: Int = 1
   
   // Other data
   let size: CGFloat = 100
@@ -63,10 +64,11 @@ struct PuzzleView: View {
           )
         Text(guessed)
           .font(.subheadline)
+          .monospaced()
           .foregroundColor(chevron == "chevron.down" ? Color.customDarkGrey : Color.black)
           .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
           .offset(CGSize(width: -5, height: 0))
-          .lineLimit(1)
+          .lineLimit(lineLimit)
           .padding([.top], 12.5)
         HStack() {
           Spacer()
@@ -81,10 +83,34 @@ struct PuzzleView: View {
         if(chevron == "chevron.down") { // Expand
           chevron = "chevron.up"
           guessBoxHeight = UIScreen.main.bounds.height * 0.7
-          
+          lineLimit = 30
+          var result = ""
+          var orderedGuesses = (guessedList.sorted { $0.count < $1.count }).split()
+          var a1 = orderedGuesses[0]
+          var a2 = orderedGuesses[1]
+          var rows = 0
+          var extra = ""
+          if(a1.count == a2.count) {
+            rows = a1.count
+          } else if(a1.count > a2.count) {
+            rows = a2.count
+            extra = a1.popLast()!
+          } else {
+            rows = a1.count
+            extra = a2.removeFirst()
+          }
+          print(rows, extra, a1, a2)
+          if(rows > 0) {
+            for i in 0...(rows-1) {
+              result += a1[i] + String(repeating: " ", count: 17 - a1[i].count) + a2[i] + "\n"
+            }
+          }
+          guessed = result + extra
         } else { // Collapse
           chevron = "chevron.down"
           guessBoxHeight = 45
+          lineLimit = 1
+          guessed = guessedList.joined(separator: ", ")
         }
       }
       .offset(CGSize(width: 30, height: 100))
@@ -174,7 +200,8 @@ struct PuzzleView: View {
             action: {
               if(word == "Enter guess...") { return }
               let currGuess = word.lowercased()
-              if(appData.currPuzzle.words.contains(currGuess)) {
+              //              if(appData.currPuzzle.words.contains(currGuess)) {
+              if(true) {
                 if(guessed == "Your words...") {
                   guessed = currGuess
                 } else {

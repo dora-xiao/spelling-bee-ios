@@ -98,3 +98,14 @@ func puzzleIDs(month: Int, year: Int, puzzles: [Int: Puzzle]) -> [Int] {
     .map { $0.id }
     .sorted()
 }
+
+// Split array into [[first half], [second half]]
+extension Array {
+    func split() -> [[Element]] {
+        let ct = self.count
+        let half = ct / 2
+        let leftSplit = self[0 ..< half]
+        let rightSplit = self[half ..< ct]
+        return [Array(leftSplit), Array(rightSplit)]
+    }
+}
