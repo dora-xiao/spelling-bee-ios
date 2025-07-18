@@ -23,6 +23,7 @@ struct PuzzleView: View {
     return idToDateLabel(id: appData.puzzleId)
   }
   
+  // Handle tapping a letter
   func tapLetter(_ letter: String) -> Void {
     if(word == "Enter guess...") {
       word = letter
@@ -34,6 +35,17 @@ struct PuzzleView: View {
     wrongGuess = false
   }
   
+  // Sort guesses by length and then aphabetically within each length
+  func sortGuesses(strings: [String]) -> [String] {
+      return strings.sorted {
+          if $0.count == $1.count {
+              return $0 < $1 // alphabetical
+          }
+          return $0.count < $1.count // Sort by length
+      }
+  }
+  
+  // Flash the guesses box yellow since the guess was correct
   func animateCorrectGuess() -> Void {
     strokeColor = Color.customYellow
     strokeWidth = 4
@@ -134,7 +146,7 @@ struct PuzzleView: View {
           guessBoxHeight = UIScreen.main.bounds.height * 0.7
           lineLimit = 30
           var result = ""
-          let orderedGuesses = (guessedList.sorted { $0.count < $1.count }).split()
+          let orderedGuesses = (sortGuesses(strings: guessedList)).split()
           var a1 = orderedGuesses[0]
           var a2 = orderedGuesses[1]
           var rows = 0
@@ -163,7 +175,8 @@ struct PuzzleView: View {
           if(guessedList.count == 0) {
             guessed = "Your words..."
           } else {
-            guessed = guessedList.joined(separator: ", ")
+            print(guessedList)
+            guessed = guessedList.reversed().joined(separator: ", ")
           }
         }
       }
@@ -263,7 +276,8 @@ struct PuzzleView: View {
             action: {
               if(word == "Enter guess...") { return }
               let currGuess = word.lowercased()
-              if(appData.currPuzzle.words.contains(currGuess) && !guessedList.contains(currGuess)) {
+//              if(appData.currPuzzle.words.contains(currGuess) && !guessedList.contains(currGuess)) {
+              if(true) {
                 if(guessed == "Your words...") {
                   guessed = currGuess
                 } else {
