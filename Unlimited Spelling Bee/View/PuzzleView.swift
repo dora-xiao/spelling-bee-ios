@@ -75,6 +75,7 @@ struct PuzzleView: View {
       VStack(alignment: .leading) {
         HStack {
           Image(systemName: "chevron.left")
+            .foregroundColor(Color.black)
             .padding([.leading, .top, .bottom], 20)
             .padding([.trailing], 10)
             .bold()
@@ -82,11 +83,13 @@ struct PuzzleView: View {
             .onTapGesture { appData.navigate(Views.home) }
           Text(datelabel)
             .font(.title3)
+            .foregroundColor(Color.black)
           Spacer()
           Text(String(Int(progress)) + " pts")
             .font(.title3)
             .padding([.trailing], 30)
-        }
+            .foregroundColor(Color.black)
+        }.padding([.bottom], 10)
         
         ProgressView(value: progress, total: Double(appData.currPuzzle.genius))
           .clipShape(RoundedRectangle(cornerRadius: 5))

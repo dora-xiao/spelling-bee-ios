@@ -15,7 +15,7 @@ struct HistoryView: View {
         .onTapGesture { appData.navigate(Views.home) }
       
       VStack {
-        
+        Text("To Do")
       }
     }
   }
