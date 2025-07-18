@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DatePickerView: View {
   @EnvironmentObject var appData: AppData
-  @State var year: Int = 2023
+  @State var year: Int = 2024
 
   var body: some View {
     GeometryReader { geometry in
@@ -54,10 +54,16 @@ struct DatePickerView: View {
                   }
               }
             )
-            .cornerRadius(10)
+            .clipShape(
+              UnevenRoundedRectangle(cornerRadii: .init(
+                topLeading: 10,
+                bottomLeading: 0,
+                bottomTrailing: 0,
+                topTrailing: 10
+              ))
+            )
             .frame(width: geometry.size.width - 60, height: 60)
             .padding(.horizontal, 30)
-            .padding(.bottom, 20)
 
           // Scrollable Month Picker
           ScrollView(.vertical) {
@@ -66,13 +72,13 @@ struct DatePickerView: View {
                 MonthSectionView(monthNum: monthNum, year: year, containerWidth: geometry.size.width - 80, appData: appData)
               }
             }
-            .padding([.leading, .trailing, .bottom], 20)
+            .padding([.all], 10)
           }
           .frame(
             width: geometry.size.width - 60,
             height: geometry.size.height - 160
           )
-          .background(Color.customWhite)
+          .background(Color.customLightGrey)
           .clipShape(
             UnevenRoundedRectangle(cornerRadii: .init(
               topLeading: 0,
