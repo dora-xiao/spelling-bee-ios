@@ -12,6 +12,7 @@ struct PuzzleView: View {
   @State var strokeColor: Color = Color.customGrey
   @State var strokeWidth: CGFloat = 2
   @State var boxColor: Color = Color.clear
+  @State var wrongGuess: Bool = false
   
   // Other data
   let size: CGFloat = 100
@@ -30,6 +31,7 @@ struct PuzzleView: View {
     }
     let vibrate = UIImpactFeedbackGenerator(style: .medium)
     vibrate.impactOccurred()
+    wrongGuess = false
   }
   
   func animateCorrectGuess() -> Void {
@@ -168,7 +170,15 @@ struct PuzzleView: View {
       
       VStack {
         Text(word) // Word Guess
-          .foregroundColor(word == "Enter guess..." ? Color.customGrey : Color.black)
+          .foregroundColor({
+            if(wrongGuess) {
+              return Color.red
+            } else if(word == "Enter guess...") {
+              return Color.customGrey
+            } else {
+              return Color.black
+            }
+          }())
           .bold()
           .font(.title)
           .disabled(true)
@@ -211,6 +221,7 @@ struct PuzzleView: View {
             text: "Delete",
             color: Color.customGrey,
             action: {
+              wrongGuess = false
               if(word == "Enter guess...") { return }
               if(word.count > 1) {
                 word = String(word.dropLast())
@@ -266,6 +277,7 @@ struct PuzzleView: View {
                 animateCorrectGuess()
                 print("Guessed word")
               } else {
+                wrongGuess = true
                 print("Not a word")
               }
             }
