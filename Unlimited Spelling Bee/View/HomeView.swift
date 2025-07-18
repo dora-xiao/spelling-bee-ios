@@ -27,6 +27,7 @@ struct HomeView: View {
           action: {
             if let selected = appData.puzzles.randomElement() {
               appData.puzzleId = selected.key
+              appData.currPuzzle = selected.value
               appData.letterCenter = selected.value.center
               let outerLetters = selected.value.letters.filter { $0 != selected.value.center }
               appData.letterOuter1 = outerLetters[0]

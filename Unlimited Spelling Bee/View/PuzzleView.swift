@@ -7,11 +7,11 @@ struct PuzzleView: View {
   @State var guessed: String = "Your words..."
   @State var chevron: String = "chevron.down"
   @State var guessBoxHeight: CGFloat = 45
-  var guessedList: [String] = []
+  @State var guessedList: [String] = []
   
   // Other data
   let size: CGFloat = 100
-  @State private var progress = 0.5
+  @State private var progress = 0.0
   @State var word: String = "Enter guess..."
   
   var datelabel: String {
@@ -43,7 +43,7 @@ struct PuzzleView: View {
             .font(.title3)
         }
         
-        ProgressView(value: progress, total: 1)
+        ProgressView(value: progress, total: Double(appData.currPuzzle.genius))
           .clipShape(RoundedRectangle(cornerRadius: 5))
           .frame(width: UIScreen.main.bounds.width - 60)
           .offset(CGSize(width: 30, height: 0))
@@ -172,7 +172,27 @@ struct PuzzleView: View {
             text: "Enter",
             color: Color.customGrey,
             action: {
-              // TODO: handle guess
+              if(word == "Enter guess...") { return }
+              let currGuess = word.lowercased()
+              if(appData.currPuzzle.words.contains(currGuess)) {
+                if(guessed == "Your words...") {
+                  guessed = currGuess
+                } else {
+                  guessed = currGuess + ", " + guessed
+                }
+                guessedList.append(currGuess)
+                if(appData.currPuzzle.pangrams.contains(currGuess)) {
+                  progress += Double(currGuess.count + 7)
+                } else if(currGuess.count == 4) {
+                  progress += 1.0
+                } else {
+                  progress += Double(currGuess.count)
+                }
+                word = "Enter guess..."
+                print("Guessed word")
+              } else {
+                print("Not a word")
+              }
             }
           )
         }

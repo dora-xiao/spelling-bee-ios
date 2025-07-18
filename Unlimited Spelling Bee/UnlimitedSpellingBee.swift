@@ -27,6 +27,7 @@ class AppData : ObservableObject {
   @Published var letterOuter6: String = "G"
   var puzzles: [Int: Puzzle]
   @Published var puzzleId: Int = -1
+  @Published var currPuzzle: Puzzle = initPuzzle
   
   init() {
     self.puzzles = loadPuzzlesById()
