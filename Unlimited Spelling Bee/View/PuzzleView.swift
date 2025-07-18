@@ -9,6 +9,9 @@ struct PuzzleView: View {
   @State var guessBoxHeight: CGFloat = 45
   @State var guessedList: [String] = []
   @State var lineLimit: Int = 1
+  @State var strokeColor: Color = Color.customGrey
+  @State var strokeWidth: CGFloat = 2
+  @State var boxColor: Color = Color.clear
   
   // Other data
   let size: CGFloat = 100
@@ -24,6 +27,41 @@ struct PuzzleView: View {
       word = letter
     } else if(word.count < 16) {
       word += letter
+    }
+    let vibrate = UIImpactFeedbackGenerator(style: .medium)
+    vibrate.impactOccurred()
+  }
+  
+  func animateCorrectGuess() -> Void {
+    strokeColor = Color.customYellow
+    strokeWidth = 4
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      strokeColor = Color.customYellow
+      strokeWidth = 6
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+      strokeColor = Color.customYellow
+      strokeWidth = 8
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+      strokeColor = Color.customYellow
+      strokeWidth = 6
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+      strokeColor = Color.customYellow
+      strokeWidth = 5
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+      strokeColor = Color.customYellow
+      strokeWidth = 4
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.85) {
+      strokeColor = Color.customYellow
+      strokeWidth = 3
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+      strokeColor = Color.customGrey
+      strokeWidth = 2
     }
   }
   
@@ -42,6 +80,10 @@ struct PuzzleView: View {
             .onTapGesture { appData.navigate(Views.home) }
           Text(datelabel)
             .font(.title3)
+          Spacer()
+          Text(String(Int(progress)) + " pts")
+            .font(.title3)
+            .padding([.trailing], 30)
         }
         
         ProgressView(value: progress, total: Double(appData.currPuzzle.genius))
@@ -55,12 +97,12 @@ struct PuzzleView: View {
       
       ZStack(alignment: .top) {
         RoundedRectangle(cornerRadius: 10)
-          .stroke(Color.customGrey, lineWidth: 2)
+          .stroke(strokeColor, lineWidth: strokeWidth)
           .frame(height: guessBoxHeight)
           .overlay(
             RoundedRectangle(cornerRadius: 10)
               .stroke(Color.customGrey, lineWidth: 2)
-              .background(Color.customWhite)
+              .background(boxColor)
           )
         Text(guessed)
           .font(.subheadline)
@@ -81,11 +123,12 @@ struct PuzzleView: View {
       .contentShape(Rectangle())
       .onTapGesture {
         if(chevron == "chevron.down") { // Expand
+          boxColor = Color.customWhite
           chevron = "chevron.up"
           guessBoxHeight = UIScreen.main.bounds.height * 0.7
           lineLimit = 30
           var result = ""
-          var orderedGuesses = (guessedList.sorted { $0.count < $1.count }).split()
+          let orderedGuesses = (guessedList.sorted { $0.count < $1.count }).split()
           var a1 = orderedGuesses[0]
           var a2 = orderedGuesses[1]
           var rows = 0
@@ -107,10 +150,15 @@ struct PuzzleView: View {
           }
           guessed = result + extra
         } else { // Collapse
+          boxColor = Color.clear
           chevron = "chevron.down"
           guessBoxHeight = 45
           lineLimit = 1
-          guessed = guessedList.joined(separator: ", ")
+          if(guessedList.count == 0) {
+            guessed = "Your words..."
+          } else {
+            guessed = guessedList.joined(separator: ", ")
+          }
         }
       }
       .offset(CGSize(width: 30, height: 100))
@@ -200,8 +248,7 @@ struct PuzzleView: View {
             action: {
               if(word == "Enter guess...") { return }
               let currGuess = word.lowercased()
-              //              if(appData.currPuzzle.words.contains(currGuess)) {
-              if(true) {
+              if(appData.currPuzzle.words.contains(currGuess) && !guessedList.contains(currGuess)) {
                 if(guessed == "Your words...") {
                   guessed = currGuess
                 } else {
@@ -216,6 +263,7 @@ struct PuzzleView: View {
                   progress += Double(currGuess.count)
                 }
                 word = "Enter guess..."
+                animateCorrectGuess()
                 print("Guessed word")
               } else {
                 print("Not a word")
