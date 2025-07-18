@@ -41,7 +41,7 @@ struct DatePickerView: View {
                   }
 
                 Spacer()
-                Text(String(year)).font(.title).bold()
+                Text(String(year)).font(.title).bold().foregroundColor(Color.black)
                 Spacer()
 
                 Image(systemName: "chevron.right")
@@ -103,6 +103,7 @@ struct MonthSectionView: View {
       Text(monthName)
         .font(.headline)
         .padding(.leading, 10)
+        .foregroundColor(Color.black)
 
       LazyVGrid(columns: Array(repeating: GridItem(.fixed(tileSize), spacing: 10), count: 4), spacing: 10) {
         ForEach(puzzles, id: \.self) { puzzleID in
