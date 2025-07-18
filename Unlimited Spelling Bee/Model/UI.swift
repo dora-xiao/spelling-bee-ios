@@ -25,6 +25,7 @@ extension UIColor {
 extension Color {
   static let customGrey = Color(UIColor(rgb: 0xE6E6E6))
   static let customDarkGrey = Color(UIColor(rgb: 0xC4C4C4))
+  static let customLightGrey = Color(UIColor(rgb: 0xF5F5F5))
   static let customYellow = Color(UIColor(rgb: 0xF7DA20))
   static let customWhite = Color(UIColor(rgb: 0xFAFAFA))
 }
@@ -142,3 +143,14 @@ struct Tile: View {
     }
   }
 }
+
+// Custom round corners
+extension UIView {
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
+    }
+}
+

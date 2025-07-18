@@ -26,11 +26,15 @@ class AppData : ObservableObject {
   @Published var letterOuter5: String = "F"
   @Published var letterOuter6: String = "G"
   var puzzles: [Int: Puzzle]
+  var minYear: Int
+  var maxYear: Int
   @Published var puzzleId: Int = -1
   @Published var currPuzzle: Puzzle = initPuzzle
   
   init() {
     self.puzzles = loadPuzzlesById()
+    self.minYear = idToDate(id: self.puzzles.keys.min()!)!.2
+    self.maxYear = idToDate(id: self.puzzles.keys.max()!)!.2
   }
     
   func navigate(_ destination: Views) {
