@@ -49,6 +49,7 @@ class AppData: ObservableObject {
     let fetchRequest: NSFetchRequest<PuzzleHistory> = PuzzleHistory.fetchRequest()
     do {
       history = try context.fetch(fetchRequest)
+      print(history)
     } catch {
       print("Failed to fetch puzzle history: \(error)")
     }

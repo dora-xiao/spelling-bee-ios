@@ -377,6 +377,7 @@ struct PuzzleView: View {
     }
     .onAppear {
       // deleteHistory(appData: appData, puzzleId: 2064)
+      // deleteAllHistories(appData: appData)
       if let saved = appData.history.first(where: { $0.puzzleId == Int32(appData.puzzleId) }) {
         self.guessedList = saved.guessedList as? [String] ?? []
         self.progress = saved.progress
