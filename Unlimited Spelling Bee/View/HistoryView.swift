@@ -2,15 +2,17 @@ import SwiftUI
 
 struct HistoryView: View {
   @EnvironmentObject var appData: AppData
-
+  @State private var showingConfirmation = false
+  @State private var toDelete = -1
+  
   var sortedHistory: [PuzzleHistory] {
     appData.history.sorted(by: { ($0.lastModified ?? .distantPast) > ($1.lastModified ?? .distantPast) })
   }
-
+  
   var body: some View {
     ZStack(alignment: .topLeading) {
       Color.customWhite.ignoresSafeArea()
-
+      
       VStack(alignment: .leading, spacing: 0) {
         // Back button + title
         HStack {
@@ -21,15 +23,15 @@ struct HistoryView: View {
             .bold()
             .font(.title3)
             .onTapGesture { appData.navigate(Views.home) }
-
+          
           Text("History")
             .font(.title3)
             .foregroundColor(Color.black)
-
+          
           Spacer()
         }
         .padding(.bottom, 10)
-
+        
         if sortedHistory.isEmpty {
           Spacer()
           Text("No history found")
@@ -45,12 +47,12 @@ struct HistoryView: View {
                 let progress = history.progress
                 let genius = Double(appData.puzzles[puzzleId]?.genius ?? 1)
                 let fraction = min(progress / genius, 1.0)
-
+                
                 ZStack(alignment: .leading) {
                   // Full background tile
                   RoundedRectangle(cornerRadius: 20)
                     .fill(Color.customGrey)
-
+                  
                   // Progress fill
                   RoundedRectangle(cornerRadius: 20)
                     .fill(Color.customYellow)
@@ -61,7 +63,7 @@ struct HistoryView: View {
                         Spacer()
                       }
                     )
-
+                  
                   HStack {
                     // Tap area (left side)
                     Button(action: {
@@ -87,13 +89,23 @@ struct HistoryView: View {
                             .foregroundColor(.black)
                             .font(.caption)
                         }
-
+                        
                         // Delete button
                         Button(action: {
-                          deleteHistory(appData: appData, puzzleId: puzzleId)
+                          showingConfirmation = true
+                          toDelete = puzzleId
                         }) {
                           Image(systemName: "trash.fill")
                             .foregroundColor(.red)
+                        }
+                        .confirmationDialog("Delete Item?", isPresented: $showingConfirmation) {
+                          Button("Delete", role: .destructive) {
+                            deleteHistory(appData: appData, puzzleId: toDelete)
+                          }
+                          Button("Cancel", role: .cancel) {}
+                        }
+                        message: {
+                          Text("Are you sure you want to delete the \(idToDateLabel(id: toDelete)) puzzle?")
                         }
                         .padding(.leading, 8)
                       }
@@ -113,7 +125,7 @@ struct HistoryView: View {
       }
     }
   }
-
+  
   func timeAgo(since date: Date) -> String {
     let interval = Date().timeIntervalSince(date)
     let seconds = Int(interval)
