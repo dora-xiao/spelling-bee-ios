@@ -134,6 +134,7 @@ func saveHistory(appData: AppData, puzzleId: Int, progress: Double, guessedList:
   if let existing = appData.history.first(where: { $0.puzzleId == Int32(puzzleId) }) {
     existing.progress = progress
     existing.guessedList = guessedList as NSArray
+    existing.lastModified = Date()
   } else {
     let newHistory = PuzzleHistory(context: appData.context)
     newHistory.puzzleId = Int32(puzzleId)
@@ -148,8 +149,7 @@ func saveHistory(appData: AppData, puzzleId: Int, progress: Double, guessedList:
     appData.loadHistory()
     print("Saved history:")
     appData.history.forEach {
-      let list = $0.guessedList as? [String] ?? []
-      print("Puzzle \($0.puzzleId): \(list)")
+      print("Puzzle \($0.puzzleId) (@ \($0.lastModified!): \($0.guessedList!)")
     }
   } catch {
     print("Failed to save history: \(error)")
