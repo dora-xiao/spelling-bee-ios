@@ -113,6 +113,20 @@ struct HistoryView: View {
                       .padding(.vertical, 16)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    .contentShape(Rectangle())
+                  }
+                  .onTapGesture {
+                    appData.puzzleId = puzzleId
+                    appData.currPuzzle = appData.puzzles[puzzleId]!
+                    appData.letterCenter = appData.currPuzzle.center
+                    let outerLetters = appData.currPuzzle.letters.filter { $0 != appData.currPuzzle.center }
+                    appData.letterOuter1 = outerLetters[0]
+                    appData.letterOuter2 = outerLetters[1]
+                    appData.letterOuter3 = outerLetters[2]
+                    appData.letterOuter4 = outerLetters[3]
+                    appData.letterOuter5 = outerLetters[4]
+                    appData.letterOuter6 = outerLetters[5]
+                    appData.navigate(Views.puzzle)
                   }
                 }
                 .frame(height: 70)
