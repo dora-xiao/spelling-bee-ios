@@ -114,7 +114,6 @@ extension Array {
 // Adding string access
 extension String {
   subscript (_ index: Int) -> String {
-    
     get {
       String(self[self.index(startIndex, offsetBy: index)])
     }
@@ -140,6 +139,7 @@ func saveHistory(appData: AppData, puzzleId: Int, progress: Double, guessedList:
     newHistory.puzzleId = Int32(puzzleId)
     newHistory.progress = progress
     newHistory.guessedList = guessedList as NSArray
+    newHistory.lastModified = Date()
     appData.history.append(newHistory)
   }
   

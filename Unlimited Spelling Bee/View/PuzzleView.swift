@@ -385,7 +385,10 @@ struct PuzzleView: View {
         } else {
           self.guessed = guessedList.reversed().joined(separator: ", ")
         }
-        print(progress, guessedList, guessed)
+        print("Already guessed (\(Int(progress)) pts): \(guessedList)")
+        if let lastModified = saved.lastModified {
+          print("Last modified: \(lastModified.formatted(.iso8601.year().month().day()))")
+        }
       }
     }
   }
