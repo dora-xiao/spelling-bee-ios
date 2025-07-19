@@ -13,6 +13,8 @@ struct PuzzleView: View {
   @State var strokeWidth: CGFloat = 2
   @State var boxColor: Color = Color.clear
   @State var wrongGuess: Bool = false
+  @State var hint: String = ""
+  @State var revealed: String = ""
   
   // Other data
   let size: CGFloat = 100
@@ -27,6 +29,11 @@ struct PuzzleView: View {
   func tapLetter(_ letter: String) -> Void {
     if(word == "Enter guess...") {
       word = letter
+    } else if (hint != "") {
+      let start = (word.components(separatedBy: "-"))[0]
+      if(start.count < hint.count) {
+        word = start + letter + String(repeating: "-", count: hint.count - start.count - 1)
+      }
     } else if(word.count < 16) {
       word += letter
     }
@@ -37,12 +44,12 @@ struct PuzzleView: View {
   
   // Sort guesses by length and then aphabetically within each length
   func sortGuesses(strings: [String]) -> [String] {
-      return strings.sorted {
-          if $0.count == $1.count {
-              return $0 < $1 // alphabetical
-          }
-          return $0.count < $1.count // Sort by length
+    return strings.sorted {
+      if $0.count == $1.count {
+        return $0 < $1 // alphabetical
       }
+      return $0.count < $1.count // Sort by length
+    }
   }
   
   // Flash the guesses box yellow since the guess was correct
@@ -77,6 +84,35 @@ struct PuzzleView: View {
       strokeColor = Color.customGrey
       strokeWidth = 2
     }
+  }
+  
+  func expandGuesses(_ guessedListCustom: [String]) {
+    boxColor = Color.customWhite
+    chevron = "chevron.up"
+    guessBoxHeight = UIScreen.main.bounds.height * 0.7
+    lineLimit = 30
+    var result = ""
+    let orderedGuesses = (sortGuesses(strings: guessedListCustom)).split()
+    var a1 = orderedGuesses[0]
+    var a2 = orderedGuesses[1]
+    var rows = 0
+    var extra = ""
+    if(a1.count == a2.count) {
+      rows = a1.count
+    } else if(a1.count > a2.count) {
+      rows = a2.count
+      extra = a1.popLast()!
+    } else {
+      rows = a1.count
+      extra = a2.removeFirst()
+    }
+    print(rows, extra, a1, a2)
+    if(rows > 0) {
+      for i in 0...(rows-1) {
+        result += a1[i] + String(repeating: " ", count: 17 - a1[i].count) + a2[i] + "\n"
+      }
+    }
+    guessed = result + extra
   }
   
   var body: some View {
@@ -141,32 +177,7 @@ struct PuzzleView: View {
       .contentShape(Rectangle())
       .onTapGesture {
         if(chevron == "chevron.down") { // Expand
-          boxColor = Color.customWhite
-          chevron = "chevron.up"
-          guessBoxHeight = UIScreen.main.bounds.height * 0.7
-          lineLimit = 30
-          var result = ""
-          let orderedGuesses = (sortGuesses(strings: guessedList)).split()
-          var a1 = orderedGuesses[0]
-          var a2 = orderedGuesses[1]
-          var rows = 0
-          var extra = ""
-          if(a1.count == a2.count) {
-            rows = a1.count
-          } else if(a1.count > a2.count) {
-            rows = a2.count
-            extra = a1.popLast()!
-          } else {
-            rows = a1.count
-            extra = a2.removeFirst()
-          }
-          print(rows, extra, a1, a2)
-          if(rows > 0) {
-            for i in 0...(rows-1) {
-              result += a1[i] + String(repeating: " ", count: 17 - a1[i].count) + a2[i] + "\n"
-            }
-          }
-          guessed = result + extra
+          expandGuesses(guessedList)
         } else { // Collapse
           boxColor = Color.clear
           chevron = "chevron.down"
@@ -192,6 +203,8 @@ struct PuzzleView: View {
               return Color.red
             } else if(word == "Enter guess...") {
               return Color.customGrey
+            } else if(word == hint) {
+              return Color.customYellow
             } else {
               return Color.black
             }
@@ -200,6 +213,7 @@ struct PuzzleView: View {
           .font(.title)
           .disabled(true)
           .padding([.bottom], 20)
+          .padding([.top], 50)
           .lineLimit(1)
           .truncationMode(.head)
           .frame(width: UIScreen.main.bounds.width * 0.8)
@@ -241,7 +255,16 @@ struct PuzzleView: View {
               wrongGuess = false
               if(word == "Enter guess...") { return }
               if(word.count > 1) {
-                word = String(word.dropLast())
+                if(hint != "") {
+                  let comp = word.components(separatedBy: "-")
+                  if(!hint.starts(with: comp[0])) {
+                    let start = comp[0].dropLast()
+                    word = start + String(repeating: "-", count: hint.count - start.count)
+                    revealed = String(start)
+                  }
+                } else {
+                  word = String(word.dropLast())
+                }
               } else {
                 word = "Enter guess..."
               }
@@ -276,8 +299,7 @@ struct PuzzleView: View {
             action: {
               if(word == "Enter guess...") { return }
               let currGuess = word.lowercased()
-//              if(appData.currPuzzle.words.contains(currGuess) && !guessedList.contains(currGuess)) {
-              if(true) {
+              if(appData.currPuzzle.words.contains(currGuess) && !guessedList.contains(currGuess)) {
                 if(guessed == "Your words...") {
                   guessed = currGuess
                 } else {
@@ -292,15 +314,65 @@ struct PuzzleView: View {
                   progress += Double(currGuess.count)
                 }
                 word = "Enter guess..."
+                hint = ""
                 animateCorrectGuess()
                 print("Guessed word")
               } else {
                 wrongGuess = true
-                print("Not a word")
+                print("Not a word: \(currGuess) in \(appData.currPuzzle.words)")
               }
             }
           )
         }
+        .frame(height: 45)
+        .padding([.bottom], 20)
+        
+        HStack {
+          ButtonOutlineSymbol(
+            symbol: "lightbulb",
+            color: Color.customGrey,
+            action: {
+              wrongGuess = false
+              if(hint == "") { // Choose hint word
+                let notGuessed = Array(Set(appData.currPuzzle.words).subtracting(Set(guessedList)))
+                let newHint = notGuessed.randomElement()
+                if let chosenHint = newHint {
+                  hint = chosenHint.uppercased()
+                  revealed = String(chosenHint[0]).uppercased()
+                  word = String(chosenHint[0]).uppercased() + String(repeating: "-", count: chosenHint.count - 1)
+                }
+              } else if(word != hint) {
+                var newWord = ""
+                var alreadyRevealed = false
+                for i in 0...hint.count-1 {
+                  if(word[i] != hint[i]) {
+                    if(alreadyRevealed) {
+                      newWord += "-"
+                    } else {
+                      newWord += String(hint[i])
+                      revealed += String(hint[i])
+                      alreadyRevealed = true
+                    }
+                  } else {
+                    newWord += String(hint[i])
+                  }
+                }
+                word = newWord
+                print("Hint: \(hint) | Revealed: \(revealed)")
+              }
+            }
+          )
+          
+          ButtonOutline(
+            text: "Reveal",
+            color: Color.customGrey,
+            action: {
+              let revealedList = appData.currPuzzle.words
+              expandGuesses(revealedList)
+            }
+          )
+        }
+        .frame(height: 45)
       }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
   }
