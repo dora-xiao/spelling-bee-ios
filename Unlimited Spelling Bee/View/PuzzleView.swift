@@ -256,10 +256,11 @@ struct PuzzleView: View {
               if(word.count > 1) {
                 if(hint != "") {
                   let comp = word.components(separatedBy: "-")
-                  if(!hint.starts(with: comp[0])) {
+                  
+                  print("Deleting from word \(comp[0]), hint \(hint), revealed \(revealed)")
+                  if(revealed.count < comp[0].count) {
                     let start = comp[0].dropLast()
                     word = start + String(repeating: "-", count: hint.count - start.count)
-                    revealed = String(start)
                   }
                 } else {
                   word = String(word.dropLast())
@@ -343,6 +344,7 @@ struct PuzzleView: View {
                 }
               } else if(word != hint) {
                 var newWord = ""
+                var newRevealed = ""
                 var alreadyRevealed = false
                 for i in 0...hint.count-1 {
                   if(word[i] != hint[i]) {
@@ -350,14 +352,16 @@ struct PuzzleView: View {
                       newWord += "-"
                     } else {
                       newWord += String(hint[i])
-                      revealed += String(hint[i])
+                      newRevealed += String(hint[i])
                       alreadyRevealed = true
                     }
                   } else {
                     newWord += String(hint[i])
+                    newRevealed += String(hint[i])
                   }
                 }
                 word = newWord
+                revealed = newRevealed
                 print("Hint: \(hint) | Revealed: \(revealed)")
               }
             }
