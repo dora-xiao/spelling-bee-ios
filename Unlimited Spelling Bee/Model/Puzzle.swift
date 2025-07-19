@@ -1,4 +1,5 @@
 import Foundation
+import CoreData
 
 // Puzzle structure in json
 struct Puzzle: Codable {
@@ -127,3 +128,81 @@ extension String {
     }
   }
 }
+
+// Save helper
+func saveHistory(appData: AppData, puzzleId: Int, progress: Double, guessedList: [String]) {
+  // Check if it already exists
+  if let existing = appData.history.first(where: { $0.puzzleId == Int32(puzzleId) }) {
+    existing.progress = progress
+    existing.guessedList = guessedList as NSArray
+  } else {
+    let newHistory = PuzzleHistory(context: appData.context)
+    newHistory.puzzleId = Int32(puzzleId)
+    newHistory.progress = progress
+    newHistory.guessedList = guessedList as NSArray
+    appData.history.append(newHistory)
+  }
+  
+  do {
+    try appData.context.save()
+    appData.loadHistory()
+    print("Saved history:")
+    appData.history.forEach {
+      let list = $0.guessedList as? [String] ?? []
+      print("Puzzle \($0.puzzleId): \(list)")
+    }
+  } catch {
+    print("Failed to save history: \(error)")
+  }
+}
+
+// Delete saved history for one puzzle
+func deleteHistory(appData: AppData, puzzleId: Int) {
+    let context = appData.context
+    let fetchRequest: NSFetchRequest<PuzzleHistory> = PuzzleHistory.fetchRequest()
+    fetchRequest.predicate = NSPredicate(format: "puzzleId == %d", puzzleId)
+
+    do {
+        let results = try context.fetch(fetchRequest)
+        for obj in results {
+            context.delete(obj)
+        }
+        try context.save()
+        appData.loadHistory()
+        print("Deleted history for puzzle \(puzzleId)")
+    } catch {
+        print("Failed to delete history for puzzle \(puzzleId): \(error)")
+    }
+}
+
+// Delete all saved history for all puzzles
+func deleteAllHistories(appData: AppData) {
+    let context = appData.context
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = PuzzleHistory.fetchRequest()
+    let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+    do {
+        try context.execute(batchDeleteRequest)
+        try context.save()
+        appData.loadHistory()
+        print("Deleted all puzzle histories.")
+    } catch {
+        print("Failed to delete all histories: \(error)")
+    }
+}
+
+// Transformer for guessedList
+@objc(ArrayStringTransformer)
+class ArrayStringTransformer: NSSecureUnarchiveFromDataTransformer {
+  override class var allowedTopLevelClasses: [AnyClass] {
+    return [NSArray.self, NSString.self]
+  }
+  
+  static let name = NSValueTransformerName(rawValue: String(describing: ArrayStringTransformer.self))
+  
+  public static func register() {
+    let transformer = ArrayStringTransformer()
+    ValueTransformer.setValueTransformer(transformer, forName: name)
+  }
+}
+

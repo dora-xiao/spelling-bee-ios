@@ -106,7 +106,6 @@ struct PuzzleView: View {
       rows = a1.count
       extra = a2.removeFirst()
     }
-    print(rows, extra, a1, a2)
     if(rows > 0) {
       for i in 0...(rows-1) {
         result += a1[i] + String(repeating: " ", count: 17 - a1[i].count) + a2[i] + "\n"
@@ -315,6 +314,7 @@ struct PuzzleView: View {
                 }
                 word = "Enter guess..."
                 hint = ""
+                saveHistory(appData: appData, puzzleId: appData.puzzleId, progress: progress, guessedList: guessedList)
                 animateCorrectGuess()
                 print("Guessed word")
               } else {
@@ -374,6 +374,19 @@ struct PuzzleView: View {
         }
         .frame(height: 45)
       }.frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    .onAppear {
+      // deleteHistory(appData: appData, puzzleId: 2064)
+      if let saved = appData.history.first(where: { $0.puzzleId == Int32(appData.puzzleId) }) {
+        self.guessedList = saved.guessedList as? [String] ?? []
+        self.progress = saved.progress
+        if(guessedList.count == 0) {
+          self.guessed = "Your words..."
+        } else {
+          self.guessed = guessedList.reversed().joined(separator: ", ")
+        }
+        print(progress, guessedList, guessed)
+      }
     }
   }
 }
